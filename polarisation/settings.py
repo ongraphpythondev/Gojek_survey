@@ -108,13 +108,14 @@ LOGGING = {
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": os.getenv("DB_NAME", default="survey"),
-        "USER": os.getenv("DB_USER", default="sanderuser"),
-        "PASSWORD": os.getenv("DB_PASSWORD",'1200'),
-        "HOST": os.getenv("DB_HOST", default="localhost"),
-        "PORT": os.getenv("DB_PORT", default=5432),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv("DB_NAME", default="defaultdb"),
+        "USER": os.getenv("DB_USER", default="doadmin"),
+        "PASSWORD": os.getenv("DB_PASSWORD",'AVNS_2v9PDXjGALp_OGagQZL'),
+        "HOST": os.getenv("DB_HOST", default="db-postgresql-nyc1-88475-do-user-13700821-0.b.db.ondigitalocean.com"),
+        "PORT": os.getenv("DB_PORT", default=25060),
         "ATOMIC_REQUESTS": "True",
+        'OPTIONS': {'sslmode': 'require'},
     }
 }
 
