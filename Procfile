@@ -1,0 +1,1 @@
+web: gunicorn polarisation.wsgi --log-file -

@@ -1,0 +1,94 @@
+<html lang="en">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <title>Start Survey!</title>
+    </head>
+
+    <body>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="bg-success p-3 text-dark bg-opacity-50 mb-3">
+            Do not press the back or refresh button during any part of the survey. If you do, your responses will not be
+            recorded
+            and you are ineligible for the earnings.
+        </div>
+        <div class="container">
+            <p class="lead">
+                This study is part of a research project to understand people’s consumption of news. Your participation
+                in this research study is voluntary. You may choose not to participate. If you decide to participate,
+                you may withdraw at any time.
+            </p>
+
+            <p class="lead">
+                You will need to fill out a questionnaire and perform some tasks. It will take approximately 15 to 20
+                mins. To avoid excessive waiting time, you will have a maximum of 5 minutes per screen. This is enough
+                time; you will not have to rush. If you take more than 5 minutes on any screen, you will be
+                automatically logged out of the study and you will not be able to continue or restart it. A warning for
+                the same will appear after 4 minutes. If you do not have at least 20 minutes to complete this study,
+                please abandon it by closing your browser.
+            </p>
+
+            <p class="lead">
+                For agreeing to participate in this study, you will receive a fixed fee of INR 50 on completion. You
+                can additionally earn up to INR 350 based on your performance in the tasks. All payments will be made
+                electronically in the next few days. To process payments, we need your UPI ID.
+            </p>
+
+            <hr>
+            <h3> Consent </h3>
+            <p class="fst-italic">
+                I am at least 18 years of age . I understand that all the data collected from my responses will only be
+                used for research. My identity will be kept anonymous. My UPI ID or any identifying information will not
+                be linked to my responses in the tasks.
+            </p>
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+                crossorigin="anonymous">
+            </script>
+            <form action="" method="post">
+                {% csrf_token %}
+                <label class="form-check-label" for="{{ form.consent.auto_id }}">{{ form.consent.label }}</label>
+                {{ form.consent }}
+                <br>
+                <br>
+                <div class="input-group mb-3">
+                    {{form.upi_ID}}
+                    <span class="input-group-text">@</span>
+                    {{form.upi_ID_domain}}
+                </div>
+                <div class="d-grid gap-2">
+                    <input type="submit" value="Next" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+        </script>
+
+        <script>
+            var elements = document.getElementsByClassName("btn-close");
+            if (elements.length > 0) {
+                setTimeout(function () {
+                    for (var i = 0; i < elements.length; i++) {
+                        elements[i].click();
+                    }
+                }, 3000)
+            }
+        </script>
+    </body>
+
+</html>

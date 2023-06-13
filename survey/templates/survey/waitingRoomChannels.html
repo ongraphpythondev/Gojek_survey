@@ -1,0 +1,30 @@
+<script src="https://unpkg.com/htmx.org@1.7.0"
+    integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous">
+</script>
+
+<body>
+    <h1 id="app"> {{text}}</h1>
+    <h1>{{lastSeen}}</h1>
+
+    <div hx-get="/lastSeen" hx-trigger="every 2s">
+    </div>
+
+    <div hx-get="/waitingRoom" hx-trigger="every 2s">
+
+
+        {% comment %} <script>
+            var socket = new WebSocket('ws://localhost:8000/ws/some_url/');
+            socket.onmessage = function (event) {
+                var data = JSON.parse(event.data);
+
+                console.log(data);
+                document.querySelector('#app').innerText = data.message;
+                if (data = 'Refresh') {
+                    console.log("NOW FIGURE OUT HOW TO ACTUALLY SEND A GET REQUEST");
+
+                    location.reload(true);
+
+                }
+            }
+        </script> {% endcomment %}
+</body>

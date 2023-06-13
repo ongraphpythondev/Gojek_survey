@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <title>News Accuracy Task</title>
+
+        <style type="text/css">
+            .v-divider {
+                margin-left: 5px;
+                margin-right: 5px;
+                width: 1px;
+                height: 100%;
+                border-left: 1px solid gray;
+            }
+        </style>
+    </head>
+
+    <body>
+        <!-- htmx polling for last seen -->
+        <script src="https://unpkg.com/htmx.org@1.7.0"
+            integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous">
+        </script>
+        <div hx-get="/lastSeen/" hx-trigger="every 2s"> </div>
+        <!-- htmx polling -->
+        <div class="bg-success p-3 text-dark bg-opacity-50 mb-3">
+            Do not press the back or refresh button during any part of the survey. If you do, your responses will not be
+            recorded
+            and you are ineligible for the earnings.
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <h1 class="display-2">News Accuracy Task</h1>
+            </div>
+            <p class="lead">
+                <!-- You will next be shown a social media post. Your task is to judge on a scale of 0% to 100% how likely is
+                it that this post is accurate. Please evaluate the accuracy of the claim made in the post and not
+                whether the statement itself appeared in the press or social media. -->
+                You will next be shown a social media post. The content of that post could either be true or
+                false. Your task is to judge whether this post is true or false. Please evaluate the accuracy of
+                the claim made in the post and not whether the statement itself appeared in the press or
+                social media.
+            </p>
+            <p class="lead">
+                <!-- Based on the accuracy of your response, you can earn an additional amount of INR 200. Your chance of
+                winning the amount is higher the closer your response is to the true accuracy of the post. For instance,
+                if the post is true, your chance of winning the amount is higher if your response is, say, 70% compared
+                to 40%. The opposite holds if the post is false, i.e., a response of 70% gives you a lower chance of
+                winning the bonus than 40%. Therefore, it is in your best interest to answer as accurately as possible.
+                The buttons below offer some examples and finer details about how the payment procedure works. Reading
+                through these is not necessary and can be skipped. -->
+                If your response is correct, you can earn an additional amount of INR 250. For instance, if the post is true,
+                you win the amoif you say it's true but you don’t win if you say it's false. The opposite holds if the post is
+                false, i.e., you win if you say it’s false and do not win if you say it’s true.
+            </p>
+
+            <form action="" method="post">
+                {% csrf_token %}
+
+                <div class="d-grid gap-2">
+                    <input type="submit" value="Next" class="btn btn-primary">
+                </div>
+            </form>
+
+            <br>
+            <hr>
+            <!-- Added by Ranjeet -->
+            <!-- <p>
+                <button id="b2" class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#example" aria-expanded="false" aria-controls="example">
+                    Example
+                </button>
+                <button id="b1" class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#paymentProc" aria-expanded="true" aria-controls="paymentProc">
+                    Payment Procedure
+                </button>
+            </p> -->
+            <div class="collapse" id="paymentProc">
+                <div class="card card-body">
+                    <p class="lead">
+                        After you have reported your estimate about the accuracy of the post, you may earn a bonus of
+                        INR 200 as follows:
+                    </p>
+                    <ol>
+                        <li>
+                            The computer will randomly select a number between 0 and 1. Every number between 0 and 1 is
+                            equally likely.
+                        </li>
+                        <li>
+                            The difference between your reported estimate and the true accuracy of a post is the
+                            so-called prediction error. If your prediction error, multiplied by itself, is less than the
+                            random number then you will receive the INR 200 bonus. Otherwise, you will receive no bonus.
+                        </li>
+                    </ol>
+                    <p>
+                        You may wonder why we have chosen this payment rule. The reason is that this payment rule makes
+                        it optimal for you to indicate your true estimates.
+                    </p>
+                </div>
+            </div>
+            <!-- <div class="collapse" id="example">
+                <div class="card card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center" colspan="3">If the Post is True</th>
+                                <th class="v-divider" colspan="1"></th>
+                                <th class="text-center" colspan="3">If the Post is False</th>
+                            </tr>
+                            <tr>
+                                <th>Your Estimate</th>
+                                <th>Prediction Error</th>
+                                <th>Chance of Winning Bonus</th>
+                                <th class="v-divider"></th>
+                                <th>Your Estimate</th>
+                                <th>Prediction Error</th>
+                                <th>Chance of Winning Bonus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0%</td>
+                                <td>1</td>
+                                <td>0%</td>
+                                <th class="v-divider"></th>
+                                <td>0%</td>
+                                <td>0</td>
+                                <td>100%</td>
+                            </tr>
+                            <tr>
+                                <td>10%</td>
+                                <td>0.9</td>
+                                <td>19%</td>
+                                <th class="v-divider"></th>
+                                <td>10%</td>
+                                <td>0.1</td>
+                                <td>99%</td>
+                            </tr>
+                            <tr>
+                                <td>20%</td>
+                                <td>0.8</td>
+                                <td>36%</td>
+                                <th class="v-divider"></th>
+                                <td>20%</td>
+                                <td>0.2</td>
+                                <td>96%</td>
+                            </tr>
+                            <tr>
+                                <td>30%</td>
+                                <td>0.7</td>
+                                <td>51%</td>
+                                <th class="v-divider"></th>
+                                <td>30%</td>
+                                <td>0.3</td>
+                                <td>91%</td>
+                            </tr>
+                            <tr>
+                                <td>40%</td>
+                                <td>0.6</td>
+                                <td>64%</td>
+                                <th class="v-divider"></th>
+                                <td>40%</td>
+                                <td>0.4</td>
+                                <td>84%</td>
+                            </tr>
+                            <tr>
+                                <td>50%</td>
+                                <td>0.5</td>
+                                <td>75%</td>
+                                <th class="v-divider"></th>
+                                <td>50%</td>
+                                <td>0.5</td>
+                                <td>75%</td>
+                            </tr>
+                            <tr>
+                                <td>60%</td>
+                                <td>0.4</td>
+                                <td>84%</td>
+                                <th class="v-divider"></th>
+                                <td>60%</td>
+                                <td>0.6</td>
+                                <td>64%</td>
+                            </tr>
+                            <tr>
+                                <td>70%</td>
+                                <td>0.3</td>
+                                <td>91%</td>
+                                <th class="v-divider"></th>
+                                <td>70%</td>
+                                <td>0.7</td>
+                                <td>51%</td>
+                            </tr>
+                            <tr>
+                                <td>80%</td>
+                                <td>0.2</td>
+                                <td>96%</td>
+                                <th class="v-divider"></th>
+                                <td>80%</td>
+                                <td>0.8</td>
+                                <td>36%</td>
+                            </tr>
+                            <tr>
+                                <td>90%</td>
+                                <td>0.1</td>
+                                <td>99%</td>
+                                <th class="v-divider"></th>
+                                <td>90%</td>
+                                <td>0.9</td>
+                                <td>19%</td>
+                            </tr>
+                            <tr>
+                                <td>100%</td>
+                                <td>0</td>
+                                <td>100%</td>
+                                <th class="v-divider"></th>
+                                <td>100%</td>
+                                <td>1</td>
+                                <td>0%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div> -->
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+            integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous">
+        </script>
+        <script>
+            <!--If b1 is pressed and bt is already expanded, expand b1 and collapse b2
+            -->
+            document.getElementById("b1").addEventListener("click",
+            function
+            ()
+            {
+            if
+            (document.getElementById("b2").getAttribute("aria-expanded")
+            ==
+            "true")
+            {
+            document.getElementById("b2").click();
+            };
+            });
+        // <!--If b2 is pressed and bt is already expanded, expand b2 and collapse b1-->
+        document.getElementById("b2").addEventListener("click",
+        function () {
+        if(document.getElementById("b1").getAttribute("aria-expanded") == "true"){
+        document.getElementById("b1").click();
+        };
+        });
+        </script>
+    </body>
+
+</html>
