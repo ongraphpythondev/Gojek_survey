@@ -451,7 +451,7 @@ def fillSchema(request):
         #     rightSpots=6,
         #     noPreferenceSpots=0,
         # )
-
+        print("Data is Inserted")
         return HttpResponse("a")
 
 
