@@ -1271,19 +1271,44 @@ from .dbSchema import makeTreeNode, makeInteractionTreeNode2, makeInteractionTre
 def insertDataInTable(request):
     if request.method == "POST":
         print(request.POST)
-        Treatement = apps.get_model(app_label="survey", model_name=request.POST.get('table_name'))
+        _treatment = request.POST.get('table_name')
+        Treatement = apps.get_model(app_label="survey", model_name=_treatment)
         depth = int(request.POST.get("Depth"))
         number = int(request.POST.get("Number"))
         Treatement.objects.all().delete()
+        leftSpots, centreSpots, rightSpots, noPreferenceSpots = 0,0,0,0,
         
-        print(Treatement)
-        if request.POST.get('table_name') in ("T2", "C0"):
+        if _treatment in ("T2", "C0"):
             makeInteractionTreeNode(Treatement, "A", depth, number)
             makeInteractionTreeNode2(Treatement, "B", depth, number)
         else:
             makeTreeNode(Treatement, "A", depth, number)
             makeTreeNode(Treatement, "B", depth, number)
+            
         print()
+        countOfNodes = Treatement.objects.all().count()
+        if _treatment == "C0":
+            noPreferenceSpots = countOfNodes
+        elif _treatment == "T2":
+            leftSpots = countOfNodes//2
+            rightSpots = countOfNodes//2
+        elif _treatment in ("T1_L", "C0_L"):
+            leftSpots = countOfNodes
+        else:
+            rightSpots = countOfNodes
+
+        tracker = Tracker2.objects.filter(treatementName=_treatment)
+        if tracker.exists():
+            tracker.delete()
+
+        print(leftSpots,centreSpots,rightSpots,noPreferenceSpots)
+        Tracker2.objects.create(
+            treatementName = _treatment,
+            leftSpots = leftSpots,
+            centreSpots = centreSpots,
+            rightSpots = rightSpots,
+            noPreferenceSpots = noPreferenceSpots
+        )
         print("Inserted the data in",Treatement)
         modal_id = 'survey/treatment'
         admin_url = reverse('admin:index')
