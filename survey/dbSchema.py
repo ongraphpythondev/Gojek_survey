@@ -293,17 +293,6 @@ def fillSchema(request):
         # delete all participants as well
         Participant.objects.all().delete()
 
-        makeTreeNode(C0, "A", 11, 1)
-        makeTreeNode(C0, "B", 11, 1)
-
-        Tracker2.objects.create(
-            treatementName="C0",
-            leftSpots=0,
-            centreSpots=0,
-            rightSpots=0,
-            noPreferenceSpots=46,
-        )
-
         makeTreeNode(T1_L, "A", 11, 1)
         makeTreeNode(T1_L, "B", 11, 1)
 
@@ -345,6 +334,25 @@ def fillSchema(request):
 
         # Added by Ranjeet
         # Treatment object Creating
+
+        try:
+            with transaction.atomic():
+                makeInteractionTreeNode(C0, "A", 11, 1)
+                makeInteractionTreeNode2(C0, "B", 11, 1)
+        except Exception as e:
+            print(e)
+        else:
+            print("T2 created")
+
+        Tracker2.objects.create(
+            treatementName="C0",
+            leftSpots=0,
+            centreSpots=0,
+            rightSpots=0,
+            noPreferenceSpots=46,
+        )
+
+
         Treatment.objects.create(
             treatmentNodeName="C0"
         )
@@ -479,7 +487,7 @@ def makeTreeNode(Treatement, nodeID, depth, stopSplittingAt):
 
     else:
 
-        print("made node")
+        print("made node", end=" ")
 
     if child1ID:
         makeTreeNode(Treatement, child1ID, depth, stopSplittingAt)

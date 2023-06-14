@@ -107,7 +107,11 @@ class Everything(models.Model):
         max_length=800, blank=False, null=True, default=""
     )
     time_spent = models.CharField(max_length=800, blank=False, null=True, default="")
-    sources = models.CharField(max_length=1000, blank=False, null=True, default="")
+    # sources = models.CharField(max_length=1000, blank=False, null=True, default="")
+    source_social_media = models.CharField(max_length=150, blank=False, null=True, default="")
+    source_news_channels = models.CharField(max_length=150, blank=False, null=True, default="")
+    source_online_news_blogs = models.CharField(max_length=150, blank=False, null=True, default="")
+    source_newspapers = models.CharField(max_length=150, blank=False, null=True, default="")
     sm_other = models.CharField(max_length=800, blank=True, null=True, default="")
     tv_other = models.CharField(max_length=800, blank=True, null=True, default="")
     onp_other = models.CharField(max_length=800, blank=True, null=True, default="")
@@ -152,7 +156,11 @@ class DemocraticOpinion2(models.Model):
         max_length=800, blank=False, null=True, default=""
     )
     time_spent = models.CharField(max_length=800, blank=False, null=True, default="")
-    sources = models.CharField(max_length=1000, blank=False, null=True, default="")
+    # sources = models.CharField(max_length=1000, blank=False, null=True, default="")
+    source_social_media = models.CharField(max_length=150, blank=False, null=True, default="")
+    source_news_channels = models.CharField(max_length=150, blank=False, null=True, default="")
+    source_online_news_blogs = models.CharField(max_length=150, blank=False, null=True, default="")
+    source_newspapers = models.CharField(max_length=150, blank=False, null=True, default="")
     sm_other = models.CharField(max_length=800, blank=True, null=True, default="")
     tv_other = models.CharField(max_length=800, blank=True, null=True, default="")
     onp_other = models.CharField(max_length=800, blank=True, null=True, default="")
@@ -217,7 +225,7 @@ class C0(models.Model):
 
 class T1_L(models.Model):
     # only allow Left
-    nodeID = models.CharField(max_length=100, null=True, default=None, unique=True)
+    nodeID = models.CharField(max_length=150, null=True, default=None, unique=True)
     participant = models.OneToOneField(
         Participant, on_delete=models.SET_DEFAULT, null=True, default=None, blank=True
     )
@@ -227,8 +235,8 @@ class T1_L(models.Model):
     responseToNewsTimestamp = models.DateTimeField(blank=False, default=None, null=True)
     status = models.CharField(max_length=50, blank=True, default="outOfService")
     # outOfService #awaitingParticipant #awaitingParticipantResponse #responseGiven
-    child1ID = models.CharField(max_length=100, null=True, blank=True, unique=True)
-    child2ID = models.CharField(max_length=100, null=True, blank=True, unique=True)
+    child1ID = models.CharField(max_length=150, null=True, blank=True, unique=True)
+    child2ID = models.CharField(max_length=150, null=True, blank=True, unique=True)
 
     def __str__(self):
         return self.nodeID

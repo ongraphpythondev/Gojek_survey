@@ -2,6 +2,8 @@ from django import forms
 
 from .places import DISTRICT_CHOICES, STATE_CHOICES
 from .models import NewsResponse
+from django.utils.safestring import mark_safe
+
 
 
 # class to allow for placeholder in districts field
@@ -243,67 +245,84 @@ class DemocraticOpinionForm2(forms.Form):
         label="12. How much time do you spend on social media every day (average)?",
     )
 
-    SOURCES_CHOICES = [
-        (
-            "Social Media",
-            (
-                ("whatsapp", "WhatsApp"),
-                ("facebook", "Facebook"),
-                ("instagram", "Instagram"),
-                ("twitter", "Twitter"),
-                ("youtube", "YouTube"),
-                ("reddit", "Reddit"),
-                ("social media- other", "Other"),
-                ("social media- na", "None"),
-            ),
-        ),
-        (
-            "TV News Channels",
-            (
-                ("ndtv", "NDTV"),
-                ("aaj tak", "Aaj Tak"),
-                ("times now", "Times Now"),
-                ("republic", "Republic"),
-                ("sudarshan news", "Sudarshan News"),
-                ("zee news", "Zee News"),
-                ("tv news channels- other", "Other"),
-                ("tv news channels- na", "None"),
-            ),
-        ),
-        (
-            "Online News Portals/Blogs",
-            (
-                ("quint", "Quint"),
-                ("newslaundry", "Newslaundry"),
-                ("swarajya", "Swarajya"),
-                ("opindia", "OpIndia"),
-                ("scoopwhoop", "ScoopWhoop"),
-                ("wire", "Wire"),
-                ("online news portals- other", "Other"),
-                ("online news portals- na", "None"),
-            ),
-        ),
-        (
-            "Newspapers",
-            (
-                ("dainik jagran", "Dainik Jagran"),
-                ("dainik bhaskar", "Dainik Bhaskar"),
-                ("hindustan times", "Hindustan Times"),
-                ("amar ujala", "Amar Ujala"),
-                ("times of india", "Times of India"),
-                ("the hindu", "The Hindu"),
-                ("indian express", "Indian Express"),
-                ("newspapers- other", "Other"),
-                ("newspapers- na", "None"),
-            ),
-        ),
+    SOCIAL_MEDIA = [
+        ("whatsapp", "WhatsApp"),
+        ("facebook", "Facebook"),
+        ("instagram", "Instagram"),
+        ("twitter", "Twitter"),
+        ("youtube", "YouTube"),
+        ("reddit", "Reddit"),
+        ("social media- other", "Other"),
+        ("social media- na", "None"),
     ]
-    sources = forms.MultipleChoiceField(
-        choices=SOURCES_CHOICES,
-        required= True,
+
+    source_social_media = forms.MultipleChoiceField(
+        choices=SOCIAL_MEDIA,
         widget=forms.CheckboxSelectMultiple(),
-        label="13. In the recent past, what sources have you used to follow the news? (Choose all that apply)",
+        label= mark_safe(
+        """13. In the recent past, what sources have you used to follow the news? (Choose all that apply)<br/>
+        a. Social Media""",
+        )
     )
+
+    
+    TV_NEWS_CHANNELS = [
+        ("ndtv", "NDTV"),
+        ("aaj tak", "Aaj Tak"),
+        ("times now", "Times Now"),
+        ("republic", "Republic"),
+        ("sudarshan news", "Sudarshan News"),
+        ("zee news", "Zee News"),
+        ("tv news channels- other", "Other"),
+        ("tv news channels- na", "None"),
+    ]
+    source_news_channels = forms.MultipleChoiceField(
+        choices=TV_NEWS_CHANNELS,
+        widget=forms.CheckboxSelectMultiple(),
+        label="b. TV News Channels",
+    )
+
+    ONLINE_NEWS_BLOGS = [
+        ("quint", "Quint"),
+        ("newslaundry", "Newslaundry"),
+        ("swarajya", "Swarajya"),
+        ("opindia", "OpIndia"),
+        ("scoopwhoop", "ScoopWhoop"),
+        ("wire", "Wire"),
+        ("online news portals- other", "Other"),
+        ("online news portals- na", "None"),
+    ]
+    source_online_news_blogs = forms.MultipleChoiceField(
+        choices=ONLINE_NEWS_BLOGS,
+        widget=forms.CheckboxSelectMultiple(),
+        label="c. Online News Portals/Blogs",
+    )
+
+    NEWSPAPERS = [
+        ("dainik jagran", "Dainik Jagran"),
+        ("dainik bhaskar", "Dainik Bhaskar"),
+        ("hindustan times", "Hindustan Times"),
+        ("amar ujala", "Amar Ujala"),
+        ("times of india", "Times of India"),
+        ("the hindu", "The Hindu"),
+        ("indian express", "Indian Express"),
+        ("newspapers- other", "Other"),
+        ("newspapers- na", "None"),
+    ]
+
+    source_newspapers = forms.MultipleChoiceField(
+        choices=NEWSPAPERS,
+        widget=forms.CheckboxSelectMultiple(),
+        label="d. Newspapers",
+    )
+
+    
+    # sources = forms.MultipleChoiceField(
+    #     choices=SOURCES_CHOICES,
+    #     required= True,
+    #     widget=forms.CheckboxSelectMultiple(),
+    #     label="13. In the recent past, what sources have you used to follow the news? (Choose all that apply)",
+    # )
 
     sm_other = forms.CharField(
         label="",

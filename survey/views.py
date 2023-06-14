@@ -188,7 +188,6 @@ def startSurvey(request):
 
 def surveyRouter(request):
     if request.method == "GET":
-
         # import pdb; pdb.set_trace()
 
         try:
@@ -762,7 +761,7 @@ def newsResponse(request):
                 reduce right spots
             If T2:
                 if participant.democaticOpinions<50:
-                    reduce left spots
+                    reduce left spots  
                 if participant.democaticOpinions>50:
                     reduce right spots
             If Adhoc:
@@ -858,16 +857,22 @@ def newsResponse(request):
                     print("yes child exist")
                     nextNode1 = Treatement.objects.get(nodeID=node.child1ID)
                     nextNode1.status = "awaitingParticipant"
+                    if _treatement in ("C0", "T2"):
+                        nextNode1.participantTypeRequired = "left" if currentParticipant.democaticOpinions < 50 else "right"
                     nextNode1.save()
+                    
 
                 if node.child2ID:
                     nextNode2 = Treatement.objects.get(nodeID=node.child2ID)
                     nextNode2.status = "awaitingParticipant"
+                    if _treatement in ("C0", "T2"):
+                        nextNode2.participantTypeRequired = "left" if currentParticipant.democaticOpinions < 50 else "right"
                     nextNode2.save()
 
             # redirect to a new URL:
             return HttpResponseRedirect("/quizTask/")
             # return HttpResponse("thanks for filling the news Response form!")
+            
 
     if request.method == "GET":
         if ROUTING_PERMISSIONS == True:
@@ -1070,6 +1075,7 @@ def earnings(request):
                     nr = NewsResponse.objects.get(participant=participant).news_Response
 
                     print(f"news item: {news_item}")
+                    print(f"nr item: {nr}")
                     print(f"node ID: {node_ID}")
                     print("num:", num)
                     if news_item == "A" or news_item == "B" or news_item == None:
@@ -1081,8 +1087,10 @@ def earnings(request):
                         prediction_error = (100 - nr) / 100
                         print("post is accurate",prediction_error)
 
-                    if prediction_error**2 < num:
-                        accuracy += 200
+                    # if prediction_error**2 < num:
+                    #     accuracy += 200
+                    if nr == False:
+                        accuracy = 200
 
                     quiz_answers = Quiz.objects.get(participant=participant)
                     if quiz_answers.q1 == 2:
@@ -1139,7 +1147,11 @@ def earnings(request):
                     everything.voted = democratic2.voted
                     everything.social_media_apps = democratic2.social_media_apps
                     everything.time_spent = democratic2.time_spent
-                    everything.sources = democratic2.sources
+                    # everything.sources = democratic2.sources
+                    everything.source_social_media = democratic2.source_social_media
+                    everything.source_news_channels = democratic2.source_news_channels
+                    everything.source_online_news_blogs = democratic2.source_online_news_blogs
+                    everything.source_newspapers = democratic2.source_newspapers
                     everything.sm_other = democratic2.sm_other
                     everything.tv_other = democratic2.tv_other
                     everything.onp_other = democratic2.onp_other
@@ -1262,14 +1274,17 @@ def insertDataInTable(request):
         Treatement = apps.get_model(app_label="survey", model_name=request.POST.get('table_name'))
         depth = int(request.POST.get("Depth"))
         number = int(request.POST.get("Number"))
+        Treatement.objects.all().delete()
         
         print(Treatement)
-        if Treatement in ("T2", "C0"):
-            print(request.POST)
+        if request.POST.get('table_name') in ("T2", "C0"):
+            makeInteractionTreeNode(Treatement, "A", depth, number)
+            makeInteractionTreeNode2(Treatement, "B", depth, number)
         else:
-            Treatement.objects.all().delete()
             makeTreeNode(Treatement, "A", depth, number)
             makeTreeNode(Treatement, "B", depth, number)
+        print()
+        print("Inserted the data in",Treatement)
         modal_id = 'survey/treatment'
         admin_url = reverse('admin:index')
         modal_url = f'{admin_url}{modal_id}'

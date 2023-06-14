@@ -128,7 +128,7 @@
                         <table id="tbl" class="table table-striped">
                             <thead>
                                 <th scope="col">Participant No.</th>
-                                {% if current_participant_treatement != "C0" %}
+                                {% if current_participant_treatement != "C0" and  current_participant_treatement != "C0_L" and current_participant_treatement != "C0_R" %}
                                 <th class="text-center" scope="col">Affiliation</th>
                                 {% endif %}
                                 <th scope="col">Belief About the Accuracy</th>
@@ -143,7 +143,7 @@
                                         {{ context_table.participantNo|return_item:index }}
                                         {% endif %}
                                     </td>
-                                    {% if current_participant_treatement != "C0" %}
+                                    {% if current_participant_treatement != "C0" and  current_participant_treatement != "C0_L" and current_participant_treatement != "C0_R" %}
                                     <td class="text-center">
                                         <img src="{% static 'images/modi.png' %}" alt="Modi Profile" height="100"
                                             width="100">
@@ -207,8 +207,8 @@
                 integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo"
                 crossorigin="anonymous">
             </script>
-            <!-- <div hx-get="/timerNewsResponse/" hx-trigger="every 5s" hx-swap="none">
-            </div> -->
+            <div hx-get="/timerNewsResponse/" hx-trigger="every 5s" hx-swap="none">
+            </div>
             <!-- htmx polling -->
 
             <script>
