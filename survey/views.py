@@ -603,7 +603,6 @@ def newsResponseInfo(request):
     context = {"treatement": currentParticipantTreatement}
 
     if request.method == "POST":
-
         form = NewsResponseInfoForm(request.POST)
         if form.is_valid():
 
@@ -857,16 +856,16 @@ def newsResponse(request):
                     print("yes child exist")
                     nextNode1 = Treatement.objects.get(nodeID=node.child1ID)
                     nextNode1.status = "awaitingParticipant"
-                    if _treatement in ("C0", "T2"):
-                        nextNode1.participantTypeRequired = "left" if currentParticipant.democaticOpinions < 50 else "right"
+                    # if _treatement in ("C0", "T2"):
+                    #     nextNode1.participantTypeRequired = "left" if currentParticipant.democaticOpinions < 50 else "right"
                     nextNode1.save()
                     
 
                 if node.child2ID:
                     nextNode2 = Treatement.objects.get(nodeID=node.child2ID)
                     nextNode2.status = "awaitingParticipant"
-                    if _treatement in ("C0", "T2"):
-                        nextNode2.participantTypeRequired = "left" if currentParticipant.democaticOpinions < 50 else "right"
+                    # if _treatement in ("C0", "T2"):
+                    #     nextNode2.participantTypeRequired = "left" if currentParticipant.democaticOpinions < 50 else "right"
                     nextNode2.save()
 
             # redirect to a new URL:
@@ -1284,7 +1283,7 @@ def insertDataInTable(request):
         else:
             makeTreeNode(Treatement, "A", depth, number)
             makeTreeNode(Treatement, "B", depth, number)
-            
+
         print()
         countOfNodes = Treatement.objects.all().count()
         if _treatment == "C0":
