@@ -33,7 +33,7 @@
                 margin-left: 14px !important;
                 gap: 20px;
             }
-            .loader{
+            #loader{
                 position: fixed;
                 width: 100%;
                 height: 100%;
@@ -44,7 +44,7 @@
     </head>
 
     <body>
-        <div class="loader" style="display: none;"></div>
+        <div id="loader" style="display: none;"></div>
         <div class="bg-success p-3 text-dark bg-opacity-50 mb-3">
             Do not press the back or refresh button during any part of the survey. If you do, your responses will not be
             recorded
@@ -104,7 +104,7 @@
                                     who respond after you.
                                 </p>
                             {% endif %}
-                        {% elif current_participant_treatement == "T2" or current_participant_treatement == "T1_L" or current_participant_treatement == "T1_R" and  context_table.nodeID|length == 0 %}
+                        {% elif current_participant_treatement == "T2" or current_participant_treatement == "T1_L" or current_participant_treatement == "T1_R"%}
                             {% if context_table.nodeID|length == 1%}    
                             <p class="lead mt-3">
                                     You are the first respondent. So there is no information to share about others’ responses.
@@ -154,7 +154,7 @@
                                         {% endif %}
                                     </td>
                                     {% if current_participant_treatement != "C0" and  current_participant_treatement != "C0_L" and current_participant_treatement != "C0_R" %}
-                                    <td class="text-center">
+                                    <td class="">
                                         <img src="{% static 'images/modi.png' %}" alt="Modi Profile" height="100"
                                             width="100">
                                         <span class="display-6" style="white-space:nowrap;">
@@ -206,7 +206,7 @@
                     
                     <br>
                     <br>
-                    <input class="btn btn-primary" type="submit" value="Submit">
+                    <input class="btn btn-primary" id="submit_button" type="submit" value="Submit">
                 </form>
 
             </div>
@@ -224,8 +224,8 @@
             <script>
                  $(document).ready(function () {
                     $("#form1").submit(function () {
-                        // $("#submit_DemocraticOpinion2").attr("disabled", true);
-                        $(".loader").css("display", "block")
+                        $("#loader").css("display", "block")
+                        $("#submit_button").attr("disabled", true);
                         console.log("Disable")
                         return true;
                     });
