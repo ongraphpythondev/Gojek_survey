@@ -52,6 +52,7 @@ class Participant(models.Model):
     triesCheckOpenNodes = models.IntegerField(default=0)
     # awaitingToBecomeANode #IsANode #timedOut #surveyCompleted
     totalEarnings = models.IntegerField(default=0)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.upiID
@@ -125,6 +126,7 @@ class Everything(models.Model):
     nodeID = models.CharField(max_length=50, null=True, default=None)
     treatment = models.CharField(max_length=500, null=True, default=None)
     news_item = models.CharField(max_length=500, null=True, default=None)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class DemocraticOpinion1(models.Model):
@@ -324,6 +326,7 @@ class Treatment(models.Model):
         max_length=50, null=False, unique=True
     )
     isActive = models.BooleanField(null=False, default=True)
+    updated_at = models.DateTimeField(null=True, blank=False)
 
     def __str__(self):
         return self.treatmentNodeName

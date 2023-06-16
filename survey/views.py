@@ -357,6 +357,7 @@ def democraticOpinion2(request):
                 participant.participantStatus = participantStatusDict[
                     "newsAccuracyTask"
                 ]
+                participant.totalEarnings = 50
                 participant.save()
                 participantViewLog = get_participantViewLog(participant)
                 participantViewLog.newsAccuracyTaskTS = datetime.now()
@@ -502,11 +503,15 @@ def allotmentLogic2(request):
             firstParticipant = checkIfFirstParticipant(currentParticipant)
             # Added by Ranjeet
             # Added Node is active or Not
-            treatement = selectTreatement(tracker)
             activeNodes = Treatment.objects.filter(isActive=True).values_list("treatmentNodeName")
             activeNodes = [i[0] for i in activeNodes]
+            tracker = [i for i in tracker[0] if i in activeNodes]
+            print(f"treatemets available with active:{tracker}")
+            treatement = selectTreatement(tracker)
+
             print(f"ActiveNodes are:{activeNodes}")
             print(f"{currentParticipant.upiID}'s treatement is :{treatement}")
+
             
 
             if treatement in activeNodes:
@@ -558,7 +563,7 @@ def allotmentLogic2(request):
                         Log.refresh_from_db()
 
                         print(f"no open nodes in {treatement}")
-                        if Log.triesCheckOpenNodes > 60:
+                        if Log.triesCheckOpenNodes > 15:
                             # -----allot to an adhoc node-----
                             print("creating an adhoc node")
                             openNode = AdHocNodes.objects.create(
@@ -570,7 +575,7 @@ def allotmentLogic2(request):
                             response = HttpResponse()
                             response["HX-Redirect"] = "/newsResponseInfo/"
                             return response
-                            # ----------------------------------
+                            #.   ----------------------------------
 
                         deadNodeAndParticipant = deadNodes(treatement)
                         if deadNodeAndParticipant:
@@ -821,7 +826,7 @@ def newsResponse(request):
             # get the node based on participant id
             participant_id = Participant.objects.get(user=request.user).id
             node = Treatement.objects.get(participant=participant_id)
-            print(node.id)
+            print("FORM DATA",form.cleaned_data["news_Response"])
 
             currentParticipant = Participant.objects.get(user=request.user)
             currentParticipant.participantStatus = participantStatusDict["quizTask"]
@@ -1255,9 +1260,9 @@ def noSpotsAvailable(request):
 def startStopSession(request):
     all_active = Treatment.objects.all().values_list('isActive')
     if False in [i[0] for i in all_active]:
-        Treatment.objects.all().update(isActive=True)
+        Treatment.objects.all().update(isActive=True, updated_at=datetime.now())
     else:
-        Treatment.objects.all().update(isActive=False)
+        Treatment.objects.all().update(isActive=False,updated_at=datetime.now())
 
     modal_id = 'survey/treatment'
     admin_url = reverse('admin:index')
@@ -1309,6 +1314,59 @@ def insertDataInTable(request):
             noPreferenceSpots = noPreferenceSpots
         )
         print("Inserted the data in",Treatement)
+        modal_id = 'survey/treatment'
+        admin_url = reverse('admin:index')
+        modal_url = f'{admin_url}{modal_id}'
+        return redirect(modal_url)
+
+import io, csv
+from zipfile import ZipFile
+def downloadCSV(request):
+    if request.method == "GET":
+        print("INSIDE")
+        treatment = Treatment.objects.filter(isActive=True)
+        if treatment.exists():
+            session_start_time = treatment.first().updated_at
+            print(session_start_time)
+            participants = Participant.objects.filter(updated_at__range=(session_start_time,datetime.now()))
+            print(participants)
+
+            everythings = Everything.objects.filter(updated_at__range=(session_start_time,datetime.now())).values()
+            
+            with open("Earning_data.csv",'w', newline="") as myfile:
+                wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+                wr.writerow(["totalEarnings","upiID","participantStatus"])
+                for participant in participants:
+                    data = [participant.totalEarnings,participant.upiID,participant.participantStatus]
+                    print(data)
+                    wr.writerow(data)
+
+            with open("Responses_data.csv",'w', newline="") as myfile:
+                wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+                first = True
+                for everything in everythings:
+                    everything.pop('updated_at')
+                    if first:
+                        wr.writerow(everything)
+                        first = False
+                    wr.writerow(everything.values())
+            byte = io.BytesIO()
+
+            zf = ZipFile(byte, 'w')
+            zf.write("Earning_data.csv")
+            zf.write("Responses_data.csv")
+            zf.close()
+
+            resp = HttpResponse(
+                byte.getvalue(), content_type="application/x-zip-compressed")
+            resp['Content-Disposition'] = 'attachment; filename=album.zip'
+            return resp
+
+            # with open("Responses_data.csv") as myfile:
+            #     response = HttpResponse(myfile, content_type='text/csv')
+            #     response['Content-Disposition'] = 'attachment; filename=stockitems_misuper.csv'
+            #     return response
+        
         modal_id = 'survey/treatment'
         admin_url = reverse('admin:index')
         modal_url = f'{admin_url}{modal_id}'

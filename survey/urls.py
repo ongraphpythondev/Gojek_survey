@@ -30,5 +30,6 @@ urlpatterns = [
     path("sessionNotAvailable/", views.sessionNotAvailable, name="sessionNotAvailable"),
     path("startStopSession/", views.startStopSession, name="startStopSession"),
     path("insertDataInTable/", views.insertDataInTable, name="insertDataInTable"),
+    path("downloadCSV/", views.downloadCSV, name="downloadCSV"),
 ]
 

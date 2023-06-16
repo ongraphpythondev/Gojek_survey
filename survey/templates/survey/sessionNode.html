@@ -6,6 +6,10 @@
         <a href="{% url 'survey:startStopSession' %}">
             <button type="button">Start/Stop Session</button>
         </a>
+        <a href="{% url 'survey:downloadCSV' %}", style="margin-left: 15px;">
+            <button type="button">Download CSV</button>
+        </a>
+
         <form method="POST" action="/insertDataInTable/">
             {% csrf_token %}
         <input type="number" name="Depth" placeholder="Enter the Depth" max="20"/>

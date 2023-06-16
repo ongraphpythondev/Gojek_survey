@@ -138,7 +138,7 @@ def checkIfFirstParticipant(currentParticipant):
 
 
 def selectTreatement(spots):
-    treatement = random.choice(spots[0])
+    treatement = random.choice(spots)
     return treatement
 
 
