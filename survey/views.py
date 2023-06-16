@@ -507,8 +507,13 @@ def allotmentLogic2(request):
             activeNodes = [i[0] for i in activeNodes]
             tracker = [i for i in tracker[0] if i in activeNodes]
             print(f"treatemets available with active:{tracker}")
-            treatement = selectTreatement(tracker)
-
+            if tracker:
+                treatement = selectTreatement(tracker)
+            else:
+                response = HttpResponse()
+                response["HX-Redirect"] = "/kickout/"
+                return response
+            
             print(f"ActiveNodes are:{activeNodes}")
             print(f"{currentParticipant.upiID}'s treatement is :{treatement}")
 
@@ -1215,6 +1220,24 @@ def finishPage(request):
                     return HttpResponseRedirect("/surveyRouter/")
     return HttpResponse("Thank you for taking the survey, it’s submitted. You can now close the tab")
 
+
+
+# Added by Ranjeet
+@login_required
+@never_cache
+def kickOutPage(request):
+    # took too long
+    if request.method == "GET":
+        try:
+            participant = get_current_participant(request)
+        except Exception as e:
+            print("problem at kickOut page")
+        else:
+            participant.lastSeen = timezone.now()
+            participant.totalEarnings = 0
+            participant.save()
+
+    return HttpResponse("Sorry No spots left")
 
 # Added by Ranjeet
 @login_required

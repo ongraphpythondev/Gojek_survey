@@ -27,6 +27,7 @@ urlpatterns = [
     path("noSpotsAvailable/", views.noSpotsAvailable, name="noSpotsAvailable"),
     # Added by Ranjeet
     path("finish/", views.finishPage, name="finish"),
+    path("kickout/", views.kickOutPage, name="kickout"),
     path("sessionNotAvailable/", views.sessionNotAvailable, name="sessionNotAvailable"),
     path("startStopSession/", views.startStopSession, name="startStopSession"),
     path("insertDataInTable/", views.insertDataInTable, name="insertDataInTable"),
