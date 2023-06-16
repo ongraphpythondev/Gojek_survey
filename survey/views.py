@@ -1380,9 +1380,14 @@ def downloadCSV(request):
             zf.write("Responses_data.csv")
             zf.close()
 
+            def strfTime(dateData):
+                return str(dateData.strftime("%m/%d/%Y-%H:%M:%S"))
+            session_start_time = strfTime(session_start_time)
+            now_time = strfTime(datetime.now())
+            print(session_start_time, now_time)
             resp = HttpResponse(
                 byte.getvalue(), content_type="application/x-zip-compressed")
-            resp['Content-Disposition'] = 'attachment; filename=album.zip'
+            resp['Content-Disposition'] = f'attachment; filename={str(session_start_time)}-to-{str(now_time)}.zip'
             return resp
 
             # with open("Responses_data.csv") as myfile:
