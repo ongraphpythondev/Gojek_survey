@@ -7,8 +7,9 @@ import survey.views as views
 
 app_name = "survey"
 urlpatterns = [
-    path("startSurvey/", views.startSurvey, name="startSurvey"),
-    path("democraticOpinion/", views.democraticOpinion1, name="democraticOpinion1"),
+    path('', views.Index, name="home"),
+    path("startSurvey/", views.startSurvey),
+    path("democraticOpinion1/", views.democraticOpinion1, name="democraticOpinion1"),
     path("democraticOpinion2/", views.democraticOpinion2, name="democraticOpinion2"),
     path("newsAccuracyTask/", views.newsAccuracyTask, name="newsAccuracyTask"),
     path("waitingRoomNew/", views.waitingRoomNew, name="waitingRoomNew"),

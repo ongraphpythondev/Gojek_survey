@@ -41,10 +41,13 @@
             </p>
             {% else %}
             <p class="lead">
-                This is a real-time study, and participants are responding sequentially. When assessing the accuracy of
+                <!-- This is a real-time study, and participants are responding sequentially. When assessing the accuracy of
                 the post, you will be able to see the responses of other participants, if any, who have already
                 submitted their responses. Likewise, participants assessing the post after you will be able to see the
-                responses of all before them, including yours.
+                responses of all before them, including yours. -->
+                Additionally, to signal participants’ political position, everyone’s sentiment towards PM Narendra Modi that they
+                reported in the questionnaire will be displayed. How much they like or dislike Modi is shown by thumbs up and
+                thumbs down icons, as explained in the table below
             </p>
             <!-- Added by Ranjeet -->
             {% if context.treatement != "C0" and context.treatement != "C0_L" and context.treatement != "C0_R" %}
@@ -58,29 +61,29 @@
                 <thead>
                     <tr>
                         <th scope="col" colspan="6">Icon</th>
-                        <th scope="col" colspan="6">Affiliation</th>
+                        <th scope="col" colspan="6">Sentiment</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td colspan="6"><img src="{% static 'images/modi.png' %}" alt="Modi Profile" height="100"
                                 width="100"><span class="display-6">👍👍</span></td>
-                        <td colspan="6">Strongly Approve</td>
+                        <td colspan="6">Strongly Like</td>
                     </tr>
                     <tr>
                         <td colspan="6"><img src="{% static 'images/modi.png' %}" alt="Modi Profile" height="100"
                                 width="100"><span class="display-6">👍</span></td>
-                        <td colspan="6">Approve</td>
+                        <td colspan="6">Like</td>
                     </tr>
                     <tr>
                         <td colspan="6"><img src="{% static 'images/modi.png' %}" alt="Modi Profile" height="100"
                                 width="100"><span class="display-6">👎</span></td>
-                        <td colspan="6">Disapprove</td>
+                        <td colspan="6">Dislike</td>
                     </tr>
                     <tr>
                         <td colspan="6"><img src="{% static 'images/modi.png' %}" alt="Modi Profile" height="100"
                                 width="100"><span class="display-6">👎👎</span></td>
-                        <td colspan="6">Strongly Disapprove</td>
+                        <td colspan="6">Strongly Dislike</td>
                     </tr>
                 </tbody>
             </table>

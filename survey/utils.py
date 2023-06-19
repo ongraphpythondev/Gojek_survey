@@ -106,15 +106,15 @@ def process_democratic_opinion(request, form):
     opinion = form.cleaned_data["democratic_Opinion"]
     participant.democaticOpinions = opinion
     if opinion == 0:
-        opinion = "Strongly Disapprove"
+        opinion = "Strongly Dislike;"
     elif opinion == 25:
-        opinion = "Disapprove"
+        opinion = "Dislike"
     elif opinion == 50:
-        opinion = "Neutral"
+        opinion = "Neither Like nor Dislike"
     elif opinion == 75:
-        opinion = "Approve"
+        opinion = "Like"
     elif opinion == 100:
-        opinion = "Strongly Approve"
+        opinion = "Strongly Like"
 
     democratic_form, created = DemocraticOpinion1.objects.get_or_create(
         participant=participant,

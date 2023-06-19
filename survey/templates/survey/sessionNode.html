@@ -4,10 +4,10 @@
 {% block object-tools %}
     <div>
         <a href="{% url 'survey:startStopSession' %}">
-            <button type="button">Start/Stop Session</button>
+            <button type="button">Start Session</button>
         </a>
-        <a href="{% url 'survey:downloadCSV' %}", style="margin-left: 15px;">
-            <button type="button">Download CSV</button>
+        <a href="{% url 'survey:downloadCSV' %}", style="margin-left: 15px;" >
+            <button type="button" id="downloadCSV">Stop Session/Download CSV</button>
         </a>
 
         <form method="POST" action="/insertDataInTable/">
@@ -26,6 +26,13 @@
         </form>
     </div>
     <br />
+    <script>
+        document.getElementById("downloadCSV").addEventListener("click", function() {
+            console.log("RELOADING")
+            // location.reload();
+            window.location.reload(true);
+        });
+    </script>
     
     {{ block.super }}
 {% endblock %}

@@ -95,9 +95,12 @@ logger = logging.getLogger(__name__)
 
 
 User = get_user_model()
-# Create your views here.
+# Create your views here. 
 from django.views.decorators.cache import never_cache
 
+
+def Index(request):
+    return HttpResponseRedirect("/surveyRouter/")
 
 @never_cache
 def startSurvey(request):
@@ -160,7 +163,7 @@ def startSurvey(request):
                         )
                         participantViewLog.save()
                         participant.save()
-                        return HttpResponseRedirect("/democraticOpinion/")
+                        return HttpResponseRedirect("/democraticOpinion1/")
 
             # if the user is not anonynous and we have an authenticated user
             else:
@@ -171,7 +174,7 @@ def startSurvey(request):
                     # handle is user is authenticated but not a participant yet.
                     # create a new p
                 else:
-                    response = HttpResponseRedirect("/democraticOpinion/")
+                    response = HttpResponseRedirect("/democraticOpinion1/")
                     return response
 
             # redirect to a new URL:
@@ -253,6 +256,8 @@ def democraticOpinion1(request):
 
     """
     View to get democratic Opinion and then send to democraticOpinion2 or early exit for neutrals
+    Kickout if user is belong to left nodes and there is no Left Nodes session available ['C0','T2','C0_L','T1_L']
+    Kickout if user is belong to right nodes and there is no Right Nodes session available ['C0','T2','C0_R','T1_R']
     """
 
     if request.method == "POST":
@@ -288,6 +293,14 @@ def democraticOpinion1(request):
                     currParticipant.save()
 
                     return HttpResponseRedirect("/noSpotsAvailable/")
+                
+                elif int(democraticOpinion) < 50 and not Treatment.objects.filter(treatmentNodeName__in=['C0','T2','C0_L','T1_L'],isActive=True).exists():
+                    print("No Left Node Availabe")
+                    return HttpResponseRedirect('/noSpotsAvailable/')
+                
+                elif int(democraticOpinion) > 50 and not Treatment.objects.filter(treatmentNodeName__in=['C0','T2','C0_R','T1_R'],isActive=True).exists():
+                    print("No Right Node Availabe")
+                    return HttpResponseRedirect('noSpotsAvailable/')
 
                 else:
                     # ideal: disabled rn because seconddemocraticOpinionForm is not working
@@ -334,7 +347,12 @@ def democraticOpinion1(request):
 @never_cache
 @login_required
 def democraticOpinion2(request):
+    """
+    View to get democratic Opinion and then send to newsAccuracyTask
+    Adding RS. 50 for participating for completing the questionnaire fully (the 13 questions)
+    """
     if request.method == "POST":
+        print("HEHUHJUh")
         form = DemocraticOpinionForm2(request.POST)
         # ideal folow:
         if form.is_valid():
@@ -388,7 +406,9 @@ def democraticOpinion2(request):
 @never_cache
 @login_required
 def newsAccuracyTask(request):
-
+    """
+    In this view we are showing the information related to the newsResponse post and then send to waitingRoomNew
+    """
     if request.method == "POST":
         form = NewsAccuracyTaskForm(request.POST)
         if form.is_valid:
@@ -437,6 +457,9 @@ def newsAccuracyTask(request):
 @never_cache
 @login_required
 def waitingRoomNew(request):
+    """
+    In this view we have to wait until the assignment of the Nodes.
+    """
 
     if request.method == "GET":
         if ROUTING_PERMISSIONS == True:
@@ -463,6 +486,10 @@ def waitingRoomNew(request):
 @login_required
 @never_cache
 def allotmentLogic2(request):
+    """
+    In this view we are alloting user a nodes as per the democraticOption
+    Assigning to AdHocNodes nodes if there is no spot left 
+    """
     if request.method == "GET":
         if ROUTING_PERMISSIONS == True:
             try:
@@ -511,7 +538,7 @@ def allotmentLogic2(request):
                 treatement = selectTreatement(tracker)
             else:
                 response = HttpResponse()
-                response["HX-Redirect"] = "/kickout/"
+                response["HX-Redirect"] = "/noSpotsAvailable/"
                 return response
             
             print(f"ActiveNodes are:{activeNodes}")
@@ -1226,7 +1253,6 @@ def finishPage(request):
 @login_required
 @never_cache
 def kickOutPage(request):
-    # took too long
     if request.method == "GET":
         try:
             participant = get_current_participant(request)
@@ -1239,12 +1265,22 @@ def kickOutPage(request):
 
     return HttpResponse("Sorry No spots left")
 
+
 # Added by Ranjeet
 @login_required
 @never_cache
 def endOfSurvey(request):
     # took too long
+    try:
+        participant = get_current_participant(request)
+    except Exception as e:
+        print("problem at endOfSurvey page")
+    else:
+        participant.lastSeen = timezone.now()
+        participant.totalEarnings = 0
+        participant.save()
     return HttpResponse("Sorry you took too long to answer")
+
 
 # Added by Ranjeet
 def sessionNotAvailable(request):
@@ -1256,24 +1292,53 @@ def sessionNotAvailable(request):
 @never_cache
 def noSpotsAvailable(request):
     # early kick outs
+    try:
+        participant = get_current_participant(request)
+    except Exception as e:
+        print("problem at noSpotsAvailable page")
+    else:
+        if participant.totalEarnings > 0:
+            return HttpResponse(
+                f"""
+                <html lang="en">
+                    <head>
+                        <meta charset="utf-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1">
+                        <!-- Bootstrap CSS -->
+                        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+                        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+                    </head>
+                    <body>
+                        <div class="container mt-3">
+                            <p class="lead">
+                                Our allocation algorithm randomly picks people based on suitability for the survey. Unfortunately, all the spots for today's session fitting your profile have already been taken. We will write to you if we have more sessions in the future. You can close this tab on your browser now and exit.
+                            </p>
+                            <p class="lead">
+                                For your participation in today's study, you win a reward of INR {participant.totalEarnings}.
+                            </p>
+                        </div> 
+                    </body>
+                </html>
+                """
+            )
     return HttpResponse(
         """
-        <html lang="en">
-            <head>
-                <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <!-- Bootstrap CSS -->
-                <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
-                integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-            </head>
-            <body>
-                <div class="container mt-3">
-                    <p class="lead">
-                        Our allocation algorithm randomly picks people based on suitability for the survey. Unfortunately, all the spots for today's session fitting your profile have already been taken. We will write to you if we have more sessions in the future. You can close this tab on your browser now and exit.
-                    </p>
-                </div>
-            </body>
-        </html>
+            <html lang="en">
+                <head>
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                    <!-- Bootstrap CSS -->
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+                    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+                </head>
+                <body>
+                    <div class="container mt-3">
+                        <p class="lead">
+                            Our allocation algorithm randomly picks people based on suitability for the survey. Unfortunately, all the spots for today's session fitting your profile have already been taken. We will write to you if we have more sessions in the future. You can close this tab on your browser now and exit.
+                        </p>
+                    </div> 
+                </body>
+            </html>
         """
     )
 
@@ -1281,11 +1346,11 @@ def noSpotsAvailable(request):
 # Added by Ranjeet
 @login_required
 def startStopSession(request):
-    all_active = Treatment.objects.all().values_list('isActive')
-    if False in [i[0] for i in all_active]:
-        Treatment.objects.all().update(isActive=True, updated_at=datetime.now())
-    else:
-        Treatment.objects.all().update(isActive=False,updated_at=datetime.now())
+    # all_active = Treatment.objects.all().values_list('isActive')
+    # if False in [i[0] for i in all_active]:
+    Treatment.objects.all().update(isActive=True, updated_at=datetime.now())
+    # else:
+    #     Treatment.objects.all().update(isActive=False,updated_at=datetime.now())
 
     modal_id = 'survey/treatment'
     admin_url = reverse('admin:index')
@@ -1348,11 +1413,12 @@ def downloadCSV(request):
     if request.method == "GET":
         print("INSIDE")
         treatment = Treatment.objects.filter(isActive=True)
+        print(treatment)
         if treatment.exists():
             session_start_time = treatment.first().updated_at
             print(session_start_time)
             participants = Participant.objects.filter(updated_at__range=(session_start_time,datetime.now()))
-            print(participants)
+            print("participants",participants)
 
             everythings = Everything.objects.filter(updated_at__range=(session_start_time,datetime.now())).values()
             
@@ -1385,6 +1451,9 @@ def downloadCSV(request):
             session_start_time = strfTime(session_start_time)
             now_time = strfTime(datetime.now())
             print(session_start_time, now_time)
+            Treatment.objects.all().update(isActive=False,updated_at=datetime.now())
+            print("treatment deactivated")
+
             resp = HttpResponse(
                 byte.getvalue(), content_type="application/x-zip-compressed")
             resp['Content-Disposition'] = f'attachment; filename={str(session_start_time)}-to-{str(now_time)}.zip'

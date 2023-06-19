@@ -94,16 +94,17 @@ class DemocraticOpinionForm1(forms.Form):
     )
 
     DEMOCRATIC_CHOICES = [
-        (0, "Strongly Disapprove"),
-        (25, "Disapprove"),
-        (50, "Neutral"),
-        (75, "Approve"),
-        (100, "Strongly Approve"),
+        (0, "Strongly Dislike;"),
+        (25, "Dislike"),
+        (50, "Neither Like nor Dislike"),
+        (75, "Like"),
+        (100, "Strongly Like"),
     ]
     democratic_Opinion = forms.ChoiceField(
         choices=DEMOCRATIC_CHOICES,
         widget=forms.RadioSelect(),
-        label="3. Please report your level of approval for the politics and policies of PM Narendra Modi on the following scale:",
+        # label="3. Please report your level of approval for the politics and policies of PM Narendra Modi on the following scale:",
+        label= mark_safe("3. Some people like PM Narendra Modi as a leader and some don't like him. What about you - do you like Modi or you <br> dislike him?")
     )
     
 

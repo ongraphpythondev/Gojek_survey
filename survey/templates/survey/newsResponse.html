@@ -108,12 +108,12 @@
                             {% if context_table.nodeID|length == 1%}    
                             <p class="lead mt-3">
                                     You are the first respondent. So there is no information to share about others’ responses.
-                                    However, your response and your approval rating of PM Modi will be shared with others who respond after you.
+                                    However, your response and your sentiment towards of PM Modi will be shared with others who respond after you.
                                 </p>
                             {% else %}
                                 <p class="lead mt-3">
-                                    Before you answer, we will show you the responses of previous participants and their approval ratings of
-                                    PM Modi in the order of their responses. Likewise, your response and your approval rating of PM Modi will be shared with others
+                                    Before you answer, we will show you the responses of previous participants and their sentiment towards of
+                                    PM Modi in the order of their responses. Likewise, your response and your sentiment towards of PM Modi will be shared with others
                                     who respond after you.
                                 </p>
                             {% endif %}
@@ -139,9 +139,9 @@
                             <thead>
                                 <th scope="col">Participant No.</th>
                                 {% if current_participant_treatement != "C0" and  current_participant_treatement != "C0_L" and current_participant_treatement != "C0_R" %}
-                                <th class="text-center" scope="col">Affiliation</th>
+                                <th class="text-center" scope="col">Sentiment</th>
                                 {% endif %}
-                                <th scope="col">Belief About the Accuracy</th>
+                                <th scope="col">Report About the Accuracy</th>
                             </thead>
                             <tbody>
                                 {% for index in range %}
