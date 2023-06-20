@@ -151,10 +151,12 @@
                     var label = document.createElement('label');
                     label.innerHTML = "You selected 'Other' in 'Social Media'. Please specify: ";
                     label.setAttribute('for', 'id_sm_other');
+                    element.setAttribute('required','');
                     parent.insertBefore(label, parent.firstChild);
                 } else {
                     element.hidden = true;
                     parent.removeChild(parent.firstChild);
+                    element.removeAttribute('required');
                 }
             });
 
@@ -166,10 +168,12 @@
                     var label = document.createElement('label');
                     label.innerHTML = "You selected 'Other' in 'TV News d'. Please specify: ";
                     label.setAttribute('for', 'id_tv_other');
+                    element.setAttribute('required','');
                     parent.insertBefore(label, parent.firstChild);
                 } else {
                     element.hidden = true;
                     parent.removeChild(parent.firstChild);
+                    element.removeAttribute('required');
                 }
             });
 
@@ -181,10 +185,12 @@
                     var label = document.createElement('label');
                     label.innerHTML = "You selected 'Other' in 'Online News Portals/Blogs'. Please specify: ";
                     label.setAttribute('for', 'id_onp_other');
+                    element.setAttribute('required','');
                     parent.insertBefore(label, parent.firstChild);
                 } else {
                     element.hidden = true;
                     parent.removeChild(parent.firstChild);
+                    element.removeAttribute('required');
                 }
             });
 
@@ -196,10 +202,12 @@
                     var label = document.createElement('label');
                     label.innerHTML = "You selected 'Other' in 'Newspapers'. Please specify: ";
                     label.setAttribute('for', 'id_np_other');
+                    element.setAttribute('required','');
                     parent.insertBefore(label, parent.firstChild);
                 } else {
                     element.hidden = true;
                     parent.removeChild(parent.firstChild);
+                    element.removeAttribute('required');
                 }
             });
         </script>
